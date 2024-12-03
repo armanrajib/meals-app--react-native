@@ -1,20 +1,99 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function App() {
+import CategoriesScreen from "./screens/CategoriesScreen";
+import MealsOverviewScreen from "./screens/MealsOverviewScreen";
+import MealDetailScreen from "./screens/MealDetailScreen";
+import FavoritesScreen from "./screens/FavoritesScreen";
+
+const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function DrawerNavigator() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Drawer.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#f7f7f7",
+        },
+        headerShadowVisible: false,
+        headerTitleAlign: "center",
+        headerTintColor: "#333",
+        sceneStyle: {
+          backgroundColor: "#f7f7f7",
+        },
+        drawerContentStyle: {
+          backgroundColor: "#f7f7f7",
+        },
+        drawerActiveTintColor: "#333",
+        drawerActiveBackgroundColor: "#eee",
+      }}
+    >
+      <Drawer.Screen
+        name="Categories"
+        component={CategoriesScreen}
+        options={{
+          title: "All Categories",
+          drawerIcon: ({ size, color }) => (
+            <Ionicons name="restaurant" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{
+          title: "Favorite Meals",
+          drawerIcon: ({ size, color }) => (
+            <Ionicons name="heart-outline" size={size} color={color} />
+          ),
+        }}
+      />
+    </Drawer.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function App() {
+  return (
+    <>
+      <StatusBar style="auto" />
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: "#f7f7f7",
+            },
+            headerShadowVisible: false,
+            headerTitleAlign: "center",
+            headerTintColor: "#333",
+            contentStyle: {
+              backgroundColor: "#f7f7f7",
+            },
+          }}
+        >
+          <Stack.Screen
+            name="MealCategories"
+            component={DrawerNavigator}
+            options={{
+              // title: "All Categories",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="MealsOverview"
+            component={MealsOverviewScreen}
+            // options={({ route, navigation }) => ({
+            //   title: route.params.categoryTitle,
+            // })}
+          />
+          <Stack.Screen name="MealDetail" component={MealDetailScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
+  );
+}
+
+export default App;
