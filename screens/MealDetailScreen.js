@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   Alert,
   Button,
@@ -14,9 +14,18 @@ import MealDetail from "../components/MealDetail";
 import Subtitle from "../components/MealDetail/Subtitle";
 import List from "../components/MealDetail/List";
 import IconButton from "../components/IconButton";
+import { FavoritesContext } from "../store/context/favorites-context";
 
 function MealDetailScreen({ route, navigation }) {
+  const { ids, addFavorite, removeFavorite } = useContext(FavoritesContext);
+
   const { mealId, mealTitle } = route.params;
+
+  const mealIsFavorite = ids.includes(mealId);
+
+  function handlePressFavorite() {
+    mealIsFavorite ? removeFavorite(mealId) : addFavorite(mealId);
+  }
 
   useEffect(
     function () {
@@ -24,14 +33,14 @@ function MealDetailScreen({ route, navigation }) {
         title: mealTitle,
         headerRight: () => (
           <IconButton
-            icon="heart-outline"
+            icon={mealIsFavorite ? "heart-sharp" : "heart-outline"}
             color="#ff595e"
-            onPress={() => Alert.alert("Favorite", "Meal added to favorites")}
+            onPress={handlePressFavorite}
           />
         ),
       });
     },
-    [navigation, mealTitle]
+    [navigation, mealTitle, handlePressFavorite]
   );
 
   const {
