@@ -4,11 +4,20 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import { FavoritesContext } from "../store/context/favorites-context";
 import MealItem from "../components/MealItem";
+import { useSelector } from "react-redux";
 
 function FavoritesScreen() {
   const { ids } = useContext(FavoritesContext);
 
-  const favoriteMeals = MEALS.filter((meal) => ids.includes(meal.id));
+  // REDUX
+  const favoriteMealIds = useSelector(
+    (state) => state.favorites.favoriteMealIds
+  );
+
+  // const favoriteMeals = MEALS.filter((meal) => ids.includes(meal.id));
+  const favoriteMeals = MEALS.filter((meal) =>
+    favoriteMealIds.includes(meal.id)
+  );
 
   if (favoriteMeals.length === 0)
     return (
@@ -47,6 +56,7 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#333",
   },
 });
 

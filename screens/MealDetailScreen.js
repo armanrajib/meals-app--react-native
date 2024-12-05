@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 import { MEALS } from "../data/dummy-data";
 import MealDetail from "../components/MealDetail";
@@ -15,16 +16,30 @@ import Subtitle from "../components/MealDetail/Subtitle";
 import List from "../components/MealDetail/List";
 import IconButton from "../components/IconButton";
 import { FavoritesContext } from "../store/context/favorites-context";
+import {
+  addFavorite as addFavoriteRedux,
+  removeFavorite as removeFavoriteRedux,
+} from "../store/redux/favoritesSlice";
 
 function MealDetailScreen({ route, navigation }) {
   const { ids, addFavorite, removeFavorite } = useContext(FavoritesContext);
 
+  // REDUX
+  const favoriteMealIds = useSelector(
+    (state) => state.favorites.favoriteMealIds
+  );
+  const dispatch = useDispatch();
+
   const { mealId, mealTitle } = route.params;
 
-  const mealIsFavorite = ids.includes(mealId);
+  // const mealIsFavorite = ids.includes(mealId);
+  const mealIsFavorite = favoriteMealIds.includes(mealId);
 
   function handlePressFavorite() {
-    mealIsFavorite ? removeFavorite(mealId) : addFavorite(mealId);
+    // mealIsFavorite ? removeFavorite(mealId) : addFavorite(mealId);
+    mealIsFavorite
+      ? dispatch(removeFavoriteRedux(mealId))
+      : dispatch(addFavoriteRedux(mealId));
   }
 
   useEffect(
